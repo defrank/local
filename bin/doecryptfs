@@ -1,0 +1,5 @@
+#!/bin/sh
+#
+#    /usr/local/bin/doecryptfs
+
+exit $(/usr/sbin/pmvarrun -u$PAM_USER -o0)

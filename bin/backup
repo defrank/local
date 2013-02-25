@@ -1,0 +1,260 @@
+#!/bin/sh
+###############################################################################
+# $Id: $
+# Derek Frank (dmfrank@greenghoti.com)
+#
+# NAME
+#   backup.sh
+#
+# DESCRIPTION
+#   A backup script using rdiff-backup (rsync).
+#
+###############################################################################
+
+# Make sure only root can run script: OLD WAY
+if [ "$(id -u)" != "0" ]; then
+  echo "This script must be run as root" 1>&2
+  exit 1
+fi
+
+# Make sure only root can run script: NEW WAY
+if [[ $EUID -ne 0 ]]; then
+  echo "This script must be run as root" 1>&2
+  exit 1
+fi
+
+
+# Usage checking
+if [ "$1" == "" ]; then
+    echo "Usage: backup [source] [destination]";
+    echo "Error: '$1' is not a valid source";
+    echo "  Source: '$1'";
+    echo "  Destination: '$2'";
+    exit 1;
+elif [ "$2" == "" ]; then
+    echo "Usage: backup [source] [destination]";
+    echo "Error: '$2' is not a valid destination";
+    echo "  Source: '$1'";
+    echo "  Destination: '$2'";
+    exit 1;
+fi
+
+# Sanity error checking for '*' use
+case "$2" in
+    /bin) # if [ "$2" == "/bin" ]; then
+        echo "Error: attempting to overwrite '/bin'";
+        echo "Error: use of '*' can lead to nasty results";
+        exit 1;
+        ;;
+    /boot) # elif [ "$2" == "/boot" ]; then
+        echo "Error: attempting to overwrite '/boot'";
+        echo "Error: use of '*' can lead to nasty results";
+        exit 1;
+        ;;
+    /dev) # elif [ "$2" == "/dev" ]; then
+        echo "Error: attempting to overwrite '/dev'";
+        echo "Error: use of '*' can lead to nasty results";
+        exit 1;
+        ;;
+    /etc) # elif [ "$2" == "/etc" ]; then
+        echo "Error: attempting to overwrite '/etc'";
+        echo "Error: use of '*' can lead to nasty results";
+        exit 1;
+        ;;
+    /home) # elif [ "$2" == "/home" ]; then
+        echo "Error: attempting to overwrite '/home'";
+        echo "Error: use of '*' can lead to nasty results";
+        exit 1;
+        ;;
+    /lib) # elif [ "$2" == "/lib" ]; then
+        echo "Error: attempting to overwrite '/lib'";
+        echo "Error: use of '*' can lead to nasty results";
+        exit 1;
+        ;;
+    /lib64) # elif [ "$2" == "/lib64" ]; then
+        echo "Error: attempting to overwrite '/lib64'";
+        echo "Error: use of '*' can lead to nasty results";
+        exit 1;
+        ;;
+    /media) # elif [ "$2" == "/media" ]; then
+        echo "Error: attempting to overwrite '/media'";
+        echo "Error: use of '*' can lead to nasty results";
+        exit 1;
+        ;;
+    /mnt) # elif [ "$2" == "/mnt" ]; then
+        echo "Error: attempting to overwrite '/mnt'";
+        echo "Error: use of '*' can lead to nasty results";
+        exit 1;
+        ;;
+    /opt)
+        echo "Error: attempting to overwrite '/opt'";
+        echo "Error: use of '*' can lead to nasty results";
+        exit 1;
+        ;;
+    /pkgs)
+        echo "Error: attempting to overwrite '/pkgs'";
+        echo "Error: use of '*' can lead to nasty results";
+        exit 1;
+        ;;
+    /proc)
+        echo "Error: attempting to overwrite '/proc'";
+        echo "Error: use of '*' can lead to nasty results";
+        exit 1;
+        ;;
+
+    /repo)
+        echo "Error: attempting to overwrite '/repo'";
+        echo "Error: use of '*' can lead to nasty results";
+        exit 1;
+        ;;
+
+    /root)
+        echo "Error: attempting to overwrite '/root'";
+        echo "Error: use of '*' can lead to nasty results";
+        exit 1;
+        ;;
+
+    /run)
+        echo "Error: attempting to overwrite '/run'";
+        echo "Error: use of '*' can lead to nasty results";
+        exit 1;
+        ;;
+    /sbin)
+        echo "Error: attempting to overwrite '/sbin'";
+        echo "Error: use of '*' can lead to nasty results";
+        exit 1;
+        ;;
+    /srv)
+        echo "Error: attempting to overwrite '/srv'";
+        echo "Error: use of '*' can lead to nasty results";
+        exit 1;
+        ;;
+    /sys)
+        echo "Error: attempting to overwrite '/sys'";
+        echo "Error: use of '*' can lead to nasty results";
+        exit 1;
+        ;;
+    /tmp)
+        echo "Error: attempting to overwrite '/tmp'";
+        echo "Error: use of '*' can lead to nasty results";
+        exit 1;
+        ;;
+    /usr)
+        echo "Error: attempting to overwrite '/usr'";
+        echo "Error: use of '*' can lead to nasty results";
+        exit 1;
+        ;;
+    /var)
+        echo "Error: attempting to overwrite '/var'";
+        echo "Error: use of '*' can lead to nasty results";
+        exit 1;
+        ;;
+    /wm)
+        echo "Error: attempting to overwrite '/wm'";
+        echo "Error: use of '*' can lead to nasty results";
+        exit 1;
+        ;;
+    *) # else
+        # Set source and destination
+        SOURCE=$1;
+        DEST=$2;
+        ;;
+esac
+
+# Again more sanity checking in the event I did not cover all
+# possiblities for disaster previoiusly.
+echo "SOURCE: $SOURCE"
+echo "DESTINATION: $DEST"
+REPLY="n"
+while [ "$REPLY" != "y" ]; do
+    read  -p 'Do you confirm the source and destination? [y/N] '
+    if [ "$REPLY" == "n" ]; then
+        exit 0;
+    fi
+done
+
+
+## End here for testing
+#exit 0
+
+
+# Full system backup with rsync:
+# rsync -av /* /path/to/backup/folder --exclude={/dev/*,/proc/*,/sys/*,/tmp/*,/run/*,/mnt/*,/media/*,/lost+found,/home/*/.gvfs}
+
+case "$SOURCE" in
+    /) #if [ "$SOURCE" == "/" ]; then
+        rdiff-backup \
+            --terminal-verbosity 9 \
+            --exclude-regexp 'cache$' \
+            --exclude-regexp '(?i)/te?mp$' \
+            --exclude /mnt \
+            --exclude /vol \
+            --exclude /bak \
+            --exclude /media \
+            --exclude /usr/media \
+            --exclude /usr/media/misc \
+            --exclude /usr/lib \
+            --exclude /tmp \
+            --exclude /var/dl \
+            --exclude /var/spool \
+            --exclude /var/cache \
+            --exclude /run \
+            --exclude /proc \
+            --exclude /dev \
+            --exclude /sys \
+            --exclude /home/*/.gvfs \
+            --exclude /lost+found \
+            --exclude '/tmp/*' \
+            --exclude '/proc/*' \
+            --exclude '/sys/*' \
+            --exclude '/media/*/*' \
+            $SOURCE $DEST
+        ;;
+    *) # else
+        rdiff-backup \
+            --terminal-verbosity 9 \
+            --exclude-regexp 'cache$' \
+            --exclude-regexp '(?i)/te?mp$' \
+            --exclude $SOURCE/mnt \
+            --exclude $SOURCE/vol \
+            --exclude $SOURCE/bak \
+            --exclude $SOURCE/media \
+            --exclude $SOURCE/usr/media \
+            --exclude $SOURCE/usr/media/misc \
+            --exclude $SOURCE/usr/lib \
+            --exclude $SOURCE/tmp \
+            --exclude $SOURCE/var/dl \
+            --exclude $SOURCE/var/spool \
+            --exclude $SOURCE/var/cache \
+            --exclude $SOURCE/run \
+            --exclude $SOURCE/proc \
+            --exclude $SOURCE/dev \
+            --exclude $SOURCE/sys \
+            --exclude $SOURCE/home/*/.gvfs \
+            --exclude $SOURCE/lost+found \
+            $SOURCE $DEST
+        ;;
+esac
+
+echo "----------------------------------------"
+echo " * Listing increments of backup"
+echo "----------------------------------------"
+rdiff-backup --list-increments $DEST
+
+echo ""
+echo "----------------------------------------"
+echo " * Removing backups older than 5 Weeks"
+echo "----------------------------------------"
+rdiff-backup --force --remove-older-than 5W $DEST
+
+##Force is necessary because:
+#Fatal Error: Found 2 relevant increments, dated:
+#Sat Apr 10 12:39:24 2004
+#Sat Apr 17 04:15:01 2004
+#If you want to delete multiple increments in this way, use the --force.
+
+echo ""
+echo "----------------------------------------"
+echo " * Disk usage after backup"
+echo "----------------------------------------"
+df -h

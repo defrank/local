@@ -1,0 +1,7 @@
+#!/bin/sh
+
+while true;
+do
+    awsetbg -r /media/GreenHD/home/Pictures/desktop/starwars
+    sleep 15s
+done &

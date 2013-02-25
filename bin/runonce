@@ -1,0 +1,12 @@
+#!/bin/sh
+
+#
+# /usr/local/bin/runonce
+#
+
+# Run program unless it's already running.
+
+if [ -z "`ps -Af | grep -o -w "^.*$1 " | grep -v grep | grep -v runonce | egrep "^$USER"`" ] && [ -z "`ps -Af | grep -o -w "^.*$1" | grep -v grep | grep -v runonce | egrep "^$USER"`" ]
+  then
+    $@
+fi

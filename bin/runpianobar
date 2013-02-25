@@ -1,0 +1,9 @@
+#!/bin/sh
+
+#
+# /usr/local/bin/runpianobar
+#
+
+# Run pianobar in urxvtc only once
+
+[[ -z `pidof pianobar` ]] && urxvtc -name pianobar -e "/usr/bin/pianobar"

@@ -1,0 +1,9 @@
+#!/bin/sh
+
+#
+# /usr/local/bin/runfinch
+#
+
+# Run finch in urxvtc only once
+
+[[ -z `pidof finch` ]] && urxvtc -name finch -e "/usr/bin/finch"

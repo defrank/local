@@ -1,0 +1,27 @@
+#!/bin/sh
+
+LOGFILE="${HOME}/.conky"
+
+echo "$(date): Conky STARTING" >> ${LOGFILE}/conky.log
+
+if [ -z "`ps -Af | grep " conky -d" | grep -v grep | grep -v runonce | egrep "^$USER"`" ] ;
+  then
+    if [ -d "${HOME}/.conky" ] && [ -f "${HOME}/.conky/conkyrc-clock" ] ;
+      then
+        CONKDIR="${HOME}/.conky"
+        conky -d -c "${CONKDIR}/conkyrc-clock"   2>> ${LOGFILE}/conky.log
+        conky -d -c "${CONKDIR}/conkyrc-weather" 2>> ${LOGFILE}/conky.log
+        conky -d -c "${CONKDIR}/conkyrc-sys"     2>> ${LOGFILE}/conky.log
+        conky -d -c "${CONKDIR}/conkyrc-net"     2>> ${LOGFILE}/conky.log
+        conky -d -c "${CONKDIR}/conkyrc-disk"    2>> ${LOGFILE}/conky.log
+        conky -d -c "${CONKDIR}/conkyrc-mpd"     2>> ${LOGFILE}/conky.log
+        conky -d -c "${CONKDIR}/conkyrc-todo"    2>> ${LOGFILE}/conky.log
+        conky -d -c "${CONKDIR}/conkyrc-bar"     2>> ${LOGFILE}/conky.log
+      elif [ -f "${HOME}/.conkyrc" ]; then
+        mkdir -p "${LOGFILE}"
+        conky -d -c "${HOME}/.conkyrc"           2>> ${LOGFILE}/conky.log
+      else 
+        mkdir -p "${LOGFILE}"
+        conky -d 2>> ${LOGFILE}/conky.log
+    fi
+fi

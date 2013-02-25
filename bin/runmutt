@@ -1,0 +1,9 @@
+#!/bin/sh
+
+#
+# /usr/local/bin/runmutt
+#
+
+# Run mutt in urxvtc only once
+
+[[ -z `pidof mutt` ]] && urxvtc -name mutt -e "/usr/bin/mutt"
