@@ -1,0 +1,53 @@
+head	1.1;
+access;
+symbols;
+locks;
+comment	@# @;
+
+
+1.1
+date	2011.01.19.03.20.17;	author dmfrank;	state -;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@-
+@
+text
+@#!/bin/sh -x
+# $Id: pstopdf,v 1.2 2009-09-15 16:29:19-07 - - $
+distill=/usr/local/bin/distill
+if [ -x $distill ]
+then
+   distill \
+      -noprefs \
+      -embedallfonts on \
+      -maxsubsetpct 99 \
+      -asciipdf on \
+      -compresstext off \
+      -resolution 2400 \
+      $*
+else
+   ps2pdf=/usr/sfw/bin/ps2pdf
+   echo Running $ps2pdf
+   $ps2pdf \
+      -dPDFSETTINGS=/prepress \
+      -dColorImageResolution=2400 \
+      -dGrayImageResolution=2400 \
+      -dMonoImageResolution=2400 \
+      -dASCII85EncodePages=true \
+      -dCompressPages=false \
+      -dMaxSubsetPct=99 \
+      -dSubsetFonts=true \
+      -dEmbedAllFonts=true \
+      -dPermissions=-44 \
+      $*
+   echo Finished $ps2pdf
+fi
+@

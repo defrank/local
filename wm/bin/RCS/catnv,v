@@ -1,0 +1,49 @@
+head	1.1;
+access;
+symbols;
+locks;
+comment	@# @;
+
+
+1.1
+date	2011.01.19.03.20.17;	author dmfrank;	state -;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@-
+@
+text
+@#!/bin/sh
+# $Id: catnv,v 1.2 2009-01-21 12:44:06-08 - - $
+#
+# NAME
+#    catnv - generate report from submitted files
+#
+# SYNOPSIS
+#    catnv [file...]
+#
+# DESCRIPTION
+#    Cat multiple files with line numbers into a single file
+#    for briefly reporting sample code.
+#
+
+ls -goa $*
+
+for file in $*
+do
+   echo ""
+   echo ================================================================
+   echo File: $file
+   echo ----------------------------------------------------------------
+   cat -nv $file | expand 
+   echo ================================================================
+   echo ""
+done
+@

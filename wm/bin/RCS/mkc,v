@@ -1,0 +1,163 @@
+head	1.1;
+access;
+symbols;
+locks;
+comment	@# @;
+
+
+1.1
+date	2011.01.19.03.20.17;	author dmfrank;	state -;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@-
+@
+text
+@#!/bin/sh
+# $Id: mkc,v 1.40 2011-01-14 17:50:23-08 - - $
+SCRIPT=`basename $0`
+MANPAGE="#
+# NAME
+#    $SCRIPT - compile a C, C++, or Java program
+#
+# SYNOPSIS
+#    $SCRIPT [-cms] prog.{c,cc,java}...
+#
+# DESCRIPTION
+#    Check (ci) each source file into an RCS subdirectory and run
+#    checksource to verify basic formatting.  This script only works
+#    for simple programs entirely contained in one source file.
+#    The object or class file(s) are then removed.
+#
+#    .c    - lint and compile it.
+#    .cc   - compile it.
+#    .java - compile it, put it in a jar, including inner classes.
+#
+# OPTIONS
+#    -c   Do not delete the object or class files.
+#    -m   Print out man page information.
+#    -s   Use sunstudio instead of gcc for .c
+#"
+
+########################################################################
+# Compilation options and shell variables.
+#
+LINT=lint ; LINTOPT="-Xa -fd -m -u -x -errchk=%all"
+CC=cc     ; CCOPT="-Xa -v -g -xO0"
+CCC=CC    ; CCCOPT="-g -xO0 -features=extensions"
+GCC=gcc   ; GCCOPT="-g -O0 -Wall -Wextra -std=gnu99"
+GPP=g++   ; GPPOPT="-g -O0 -Wall -Wextra"
+
+########################################################################
+# Print a command then run it.  Exit failure if it fails.
+#
+runcmd () {
+   echo $*
+   $*
+   if [ $? -ne 0 ] ; then exit 1 ; fi
+}
+
+########################################################################
+# Print the manpage and exit.
+#
+manpage () {
+   echo "$MANPAGE" | sed -e 's/^# //' -e 's/^#//'
+   exit 0
+}
+
+########################################################################
+# Print a usage message and exit.
+#
+usage () {
+   echo "Usage: $SCRIPT [-cms] prog.{c,cc,cpp,java}..." 1>&2
+   exit 2
+}
+
+########################################################################
+# Snip a suffix from a program name.
+#
+snip () {
+   echo $1 | sed 's/\.[^.]*$//'
+}
+
+########################################################################
+# Lint and compile a C program.
+#
+compile_c () {
+   exec=`snip $source .c`
+   runcmd $LINT $LINTOPT $source
+   runcmd $GCC $GCCOPT $source -o $exec -lm
+   deletions="$exec.o"
+}
+
+########################################################################
+# Compile a C++ program.
+#
+compile_cc () {
+   exec=`snip $source`
+   runcmd $CCC $CCCOPT $source -o $exec -lm
+   deletions="$exec.o"
+}
+
+########################################################################
+# Compile a g++ program.
+#
+compile_gpp () {
+   exec=`snip $source`
+   runcmd $GPP $GPPOPT $source -o $exec -lm
+   deletions="$exec.o"
+}
+
+########################################################################
+# Compile a Java program and put the classes in a jar.
+#
+compile_java () {
+   exec=`snip $source`
+   runcmd javac -Xlint $source
+   echo Main-class: $exec >Manifest
+   runcmd jar cfm $exec Manifest $exec*.class
+   rm Manifest
+   runcmd chmod +x $exec
+   deletions="$exec*.class"
+}
+
+########################################################################
+# Check for options.
+#
+while getopts :cms opt ; do
+   case $opt in c) opt_c=1; shift;;
+                m) manpage;;
+                s) GCC=$CC; GCCOPT=$CCOPT; shift;;
+                ?) usage;;
+   esac
+done
+if [ $# -eq 0 ] ; then usage ; fi
+
+########################################################################
+# Compile each of the programs.
+#
+for source in $*
+do
+   echo @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ $SCRIPT: starting $source
+   cid + $source
+   echo `ident $source`
+   checksource $source
+   case $source in
+      *.c)        compile_c;;
+      *.cc)       compile_cc;;
+      *.cpp)      compile_gpp;;
+      *.java)     compile_java;;
+      *)          echo $SCRIPT: $source is not a known program type;;
+   esac
+   if [ ! "$opt_c" ] ; then runcmd rm -f $deletions ; fi
+   echo @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ $SCRIPT: finished $source
+done
+
+@

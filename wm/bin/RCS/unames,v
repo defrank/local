@@ -1,0 +1,33 @@
+head	1.1;
+access;
+symbols;
+locks;
+comment	@# @;
+
+
+1.1
+date	2011.01.19.03.20.17;	author dmfrank;	state -;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@-
+@
+text
+@#!/usr/bin/perl
+# $Id: unames,v 1.2 2011-01-18 13:32:20-08 - - $
+#
+# Print out the values of various unames options.
+#
+
+for $opt (qw (a i m n o p r s v)) {
+   $command = "uname -$opt";
+   print "$command = ", `$command -$opt 2>&1`;
+}
+@

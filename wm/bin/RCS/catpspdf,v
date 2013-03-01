@@ -1,0 +1,34 @@
+head	1.1;
+access;
+symbols;
+locks;
+comment	@# @;
+
+
+1.1
+date	2011.01.19.03.20.17;	author dmfrank;	state -;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@-
+@
+text
+@#!/bin/sh
+# $Id$
+#
+# NAME
+#    catpspdf - cat several files into a text and make a ps and pdf
+#
+# SYNOPSIS
+#    catpspdf psfilename textfile...
+#
+# DESCRIPTION
+#    
+@

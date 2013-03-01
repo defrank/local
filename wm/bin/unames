@@ -1,0 +1,10 @@
+#!/usr/bin/perl
+# $Id: unames,v 1.1 2011-01-18 19:20:17-08 dmfrank - $
+#
+# Print out the values of various unames options.
+#
+
+for $opt (qw (a i m n o p r s v)) {
+   $command = "uname -$opt";
+   print "$command = ", `$command -$opt 2>&1`;
+}

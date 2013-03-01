@@ -4,7 +4,7 @@ LOGFILE="${HOME}/.conky"
 
 echo "$(date): Conky STARTING" >> ${LOGFILE}/conky.log
 
-if [ -z "`ps -Af | grep " conky -d" | grep -v grep | grep -v runonce | egrep "^$USER"`" ] ;
+if [ -z "`ps -Af | grep " conky -d" | egrep "^$USER" | grep -v runonce | grep -v egrep | grep -v grep`"] ;
   then
     if [ -d "${HOME}/.conky" ] && [ -f "${HOME}/.conky/conkyrc-clock" ] ;
       then

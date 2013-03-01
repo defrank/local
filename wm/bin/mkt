@@ -1,0 +1,35 @@
+#!/bin/sh
+# $Id: mkt,v 1.1 2011-01-18 19:20:17-08 dmfrank - $
+SCRIPT=`basename $0`
+MANPAGE="#
+# NAME
+#    $SCRIPT - compile programs with mkc and run tests
+#
+# SYNOPSIS
+#    $SCRIPT prog...
+#
+# DESCRIPTION
+#    Compiles a program with the script mkc and then searches for
+#    all lines beginning with //TEST// comments and runs them through
+#    the shell.
+#
+# EXAMPLE
+#    The program might contain the test commands:
+#    //TEST// runprogram.perl -x prog.lis ./prog foo bar baz
+#    //TEST// mkpspdf prog.ps prog.cpp prog.lis
+#"
+
+if [ $# == 0 ]
+then
+   echo Usage: $0 program... 1>&2
+   echo "$MANPAGE" | sed -r 's/^# ?//'
+   exit 1
+fi
+
+for prog in $*
+do
+   mkc $1 >$1.log 2>&1
+   if [ $? -ne 0 ] ; then exit 1 ; fi
+   perl -ne 'print if s|//TEST//||' $1 | sh -x
+done
+

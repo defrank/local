@@ -1,0 +1,4 @@
+#!/usr/bin/perl
+# $Id: vix,v 1.1 2011-01-18 19:20:17-08 dmfrank - $
+($vimrc = $0) =~ s|[^/]*$|vimrc|;
+exec "vim", "-u", $vimrc, @ARGV;

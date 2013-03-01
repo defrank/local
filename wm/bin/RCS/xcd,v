@@ -1,0 +1,37 @@
+head	1.1;
+access;
+symbols;
+locks;
+comment	@# @;
+
+
+1.1
+date	2011.01.19.03.20.17;	author dmfrank;	state -;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@-
+@
+text
+@#!/bin/sh
+# $Id: xcd,v 1.2 2009-09-15 16:29:34-07 - - $
+script=`basename $0`
+if [ -z "$SHELL" ] ; then
+   SHELL=/bin/csh
+fi
+export SHELL
+for dir in $*
+do
+   shellcmd="cd $dir; xtlabel $dir; exec $SHELL"
+   echo $script: $shellcmd
+   xterm -ut +ls -e sh -c "$shellcmd" &
+   sleep 1
+done
+@

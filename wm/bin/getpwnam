@@ -1,0 +1,33 @@
+#!/usr/bin/perl
+# $Id: getpwnam,v 1.1 2011-01-18 19:20:17-08 dmfrank - $
+#
+# NAME
+#    getpwnam - get password file entries
+#
+# SYNOPSIS
+#    getpwnam [username...]
+#
+# DESCRIPTION
+#    Uses getpwnam to obtain password file entries and prints the
+#    information.  Uses the current user of none are specified.
+#
+
+$0 =~ s|.*/||;
+
+push @ARGV, scalar getpwuid $< unless @ARGV;
+for $username (@ARGV) {
+   ($name, $passwd, $uid, $gid, $quota, $comment, $gcos, $dir, $shell,
+    $expire) = getpwnam $username;
+   warn "$0: $name: no such user\n" and next unless $name;
+   print "\$name    = $name\n";
+   print "\$passwd  = $passwd\n";
+   print "\$uid     = $uid\n";
+   print "\$gid     = $gid\n";
+   print "\$quota   = $quota\n";
+   print "\$comment = $comment\n";
+   print "\$gcos    = $gcos\n";
+   print "\$dir     = $dir\n";
+   print "\$shell   = $shell\n";
+   print "\$expire  = $expire\n";
+}
+

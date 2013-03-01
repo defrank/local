@@ -1,0 +1,11 @@
+#!/bin/sh
+# $Id: catpspdf,v 1.1 2011-01-18 19:20:17-08 dmfrank - $
+#
+# NAME
+#    catpspdf - cat several files into a text and make a ps and pdf
+#
+# SYNOPSIS
+#    catpspdf psfilename textfile...
+#
+# DESCRIPTION
+#    

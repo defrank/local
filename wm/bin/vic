@@ -1,0 +1,8 @@
+#!/bin/sh
+# $Id: vic,v 1.1 2011-01-18 19:20:17-08 dmfrank - $
+for file in $*
+do
+   vi $file
+   cid + $file
+   echo `ident $file`
+done

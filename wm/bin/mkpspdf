@@ -1,0 +1,35 @@
+#!/bin/sh
+# $Id: mkpspdf,v 1.1 2011-01-18 19:20:17-08 dmfrank - $
+#
+# NAME
+#    mkpspdf - create ps and pdf files from source code
+#
+# SYNOPSIS
+#    mkpspdf [+] [dirname/]psfilename sources
+#
+# DESCRIPTION
+#    From the [dirname/]psfilename specification, create a Postscript
+#    file of the sources and bring it up in ghostview.  Also create
+#    a pdf. If an operand of + is given, ghostview is not used.
+#
+
+if [ "$1" = "+" ] ; then
+   noghostview=1
+   GjC=Gj
+   shift
+else
+   GjC=GjC
+fi
+
+dirname=`dirname $1`
+psfilename=`basename $1`
+shift
+enscript -MLetter -$GjC -p $dirname/$psfilename \
+         -b "`pwd | sed 's|^/afs/cats.ucsc.edu/courses/|$$|'`/" $@
+
+if [ "$noghostview" != "1" ] ; then
+   ghostview -magstep +1 $dirname/$psfilename &
+fi
+
+cd $dirname
+mkpdf $psfilename

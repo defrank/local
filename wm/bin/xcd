@@ -1,0 +1,14 @@
+#!/bin/sh
+# $Id: xcd,v 1.1 2011-01-18 19:20:17-08 dmfrank - $
+script=`basename $0`
+if [ -z "$SHELL" ] ; then
+   SHELL=/bin/csh
+fi
+export SHELL
+for dir in $*
+do
+   shellcmd="cd $dir; xtlabel $dir; exec $SHELL"
+   echo $script: $shellcmd
+   xterm -ut +ls -e sh -c "$shellcmd" &
+   sleep 1
+done

@@ -1,0 +1,22 @@
+#!/bin/sh
+# $Id: catstdpath,v 1.1 2011-01-18 19:20:17-08 dmfrank - $
+#
+# NAME
+#    catstdpath - cat stdpath to standard output
+#
+# SYNOPSIS
+#    catstdpath [-c]
+#
+# DESCRIPTION
+#    Cats the standard path to standard output, using either sh
+#    or csh syntax.  Default is Bourne shell syntax.  The -c option
+#    produces csh syntax.
+#
+
+stdpath=/local/bin:/usr/afsws/bin:/usr/bin:/usr/sbin:/opt/SUNWspro/bin:/usr/ccs/bin:/usr/local/bin:/usr/ucb:/usr/openwin/bin:/usr/dt/bin:/usr/local/teTeX/bin:/usr/lib/lp/postscript:$HOME/bin:.
+
+if [ "$1" = "-c" ] ; then
+   /bin/echo $stdpath | /bin/sed 's/:/ /g'
+else
+   /bin/echo $stdpath
+fi

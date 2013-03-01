@@ -1,0 +1,16 @@
+#!/usr/bin/perl
+# $Id: yes,v 1.1 2011-01-18 19:20:17-08 dmfrank - $
+#
+# NAME
+#    yes - output a string repeatedly until killed
+#
+# SYNOPSIS
+#    yes [string...]
+#
+# DESCRIPTION
+#    Repeatedly output a line with all specified string(s), or "y".
+#
+
+push @ARGV, "y" unless @ARGV;
+print "@ARGV\n" while 1;
+

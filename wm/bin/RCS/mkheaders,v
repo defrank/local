@@ -1,0 +1,50 @@
+head	1.1;
+access;
+symbols;
+locks;
+comment	@# @;
+
+
+1.1
+date	2011.01.19.03.20.17;	author dmfrank;	state -;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@-
+@
+text
+@#!/usr/bin/perl
+# $Id: mkheaders,v 1.6 2009-01-08 21:02:16-08 - - $
+#
+# NAME
+#    mkheaders - make HEADER.html files for course directories.
+#
+
+$0 =~ s|.*/||;
+$status = 0;
+$SIG{__WARN__} = sub {print STDERR "$0: @@_"; $status = 1};
+END{exit $status}
+
+@@roots = glob "/afs/cats.ucsc.edu/courses/*-wm";
+for $root (sort glob "/afs/cats.ucsc.edu/courses/*-wm") {
+   print "$0: $root\n";
+   for $subdir (sort `find $root -type d`) {
+      chomp $subdir;
+      $title = $subdir;
+      $title =~ s|^/afs/cats.ucsc.edu/courses/|~|;
+      $headername = "$subdir/HEADER.html";
+      open HEADER, ">$headername" or do {warn "$headername: $!"; next};
+      print HEADER "<TITLE>$title</TITLE>\n",
+                   "<H1>Index of $subdir</H1>\n";
+      close HEADER;
+   }
+}
+
+@

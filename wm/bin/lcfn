@@ -1,0 +1,31 @@
+#!/usr/bin/perl
+# $Id: lcfn,v 1.1 2011-01-18 19:20:17-08 dmfrank - $
+#
+# NAME
+#    lcfn - convert arg filenames to lower case
+#
+# SYNOPSIS
+#    lcfn [-_%] filename...
+#
+# OPTIONS
+#    -_  convert _ chars to -
+#    -%  convert %20 to -
+#
+
+$0 =~ s{.*/}{};
+use Getopt::Std;
+getopts ("_%", \%opts);
+
+for $file (@ARGV) {
+   $newfile = lc $file;
+   $newfile =~ s/_/-/g if $opts{"_"};
+   $newfile =~ s/%20/-/g if $opts{"%"};
+   next if $newfile eq $file;
+   print "mv $file $newfile\n";
+   if (-e $newfile) {
+      print STDERR "$0: overwrite $newfile (yes/no)?";
+      $answer = <STDIN>;
+      next unless $answer =~ m/^y(es)?$/i;
+   };
+   rename $file, $newfile or print "$0: $file: $!\n";
+};

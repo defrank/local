@@ -1,0 +1,53 @@
+head	1.1;
+access;
+symbols;
+locks;
+comment	@# @;
+
+
+1.1
+date	2011.01.19.03.20.17;	author dmfrank;	state -;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@-
+@
+text
+@#!/bin/sh -x
+# $Id: mk.jar,v 1.1 2009-05-15 19:34:04-07 - - $
+#
+# NAME
+#    mk.jar - compile a java program into a jar
+#
+# SYNOPSIS
+#    mk.jar mainclass program.java...
+#
+# DESCRIPTION
+#    Compiles a java program in multiple classes into a jar.
+#    The first operand must be the name of the jar, followed
+#    by the java source code.
+#
+
+mainclass=$1
+shift
+javaprogs=$*
+for javaprog in $javaprogs
+do
+   checksource $javaprog
+   cid + $javaprog
+   javac $javaprog
+   if [ $? -ne 0 ] ; then exit $? ; fi
+done
+classes=`echo $javaprogs | sed 's/\.java/*.class/g'`
+echo Main-class: $mainclass >Manifest
+jar cfm $mainclass Manifest $classes
+rm $classes Manifest
+chmod +x $mainclass
+@

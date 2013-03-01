@@ -1,0 +1,47 @@
+head	1.1;
+access;
+symbols;
+locks;
+comment	@# @;
+
+
+1.1
+date	2011.01.19.03.20.17;	author dmfrank;	state -;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@-
+@
+text
+@#!/bin/sh
+# $RCSfile: xtlabel,v $$Revision: 1.2 $
+Prefix=`awk 'END{printf"%c]0;",27;}' /dev/null`
+Suffix=`awk 'END{printf"%c",7;}' /dev/null`
+Hostname=`hostname|sed 's/\..*//'`
+Whoami="$Hostname!`id | sed -e 's/).*$//' -e 's/^.*(//'`"
+Tty="`tty | sed -e 's/\/dev\/tty//'`"
+
+if [ $# -le 0 ] ; then
+   if [ x"$XTERMLABEL" != x"" ] ; then
+      echo "${Prefix}${XTERMLABEL}${Suffix}"
+   else
+      echo "${Prefix}${Whoami}${Suffix}"
+   fi
+elif [ "$1" = "-" ] ; then
+   shift
+   if [ $# -eq 0 ] ; then
+      echo "${Prefix}${Whoami}:${Tty}${Suffix}"
+   else
+      echo "${Prefix}${Whoami}:$*${Suffix}"
+   fi
+else
+   echo "${Prefix}$*${Suffix}"
+fi
+@
