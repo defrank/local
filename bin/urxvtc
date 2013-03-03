@@ -1,0 +1,13 @@
+#!/bin/sh
+
+#
+# /usr/local/bin/urxvtc
+#
+
+# Start urxvtd first if not started.
+
+/usr/bin/urxvtc "$@"
+if [ $? -eq 2 ]; then
+  /usr/bin/urxvtd -q -o -f
+  /usr/bin/urxvtc "$@"
+fi
