@@ -4,7 +4,7 @@ LOGFILE="${HOME}/.conky"
 
 echo "$(date): Conky STARTING" >> ${LOGFILE}/conky.log
 
-if [ -z "`ps -Af | grep " conky -d" | egrep "^$USER" | grep -v runonce | grep -v egrep | grep -v grep`"] ;
+if [ -z "`ps -Af | grep " conky -d" | egrep "^$USER" | grep -v runonce | grep -v egrep | grep -v grep`" ] ;
   then
     if [ -d "${HOME}/.conky" ] && [ -f "${HOME}/.conky/conkyrc-clock" ] ;
       then
@@ -16,6 +16,8 @@ if [ -z "`ps -Af | grep " conky -d" | egrep "^$USER" | grep -v runonce | grep -v
         conky -d -c "${CONKDIR}/conkyrc-disk"    2>> ${LOGFILE}/conky.log
         conky -d -c "${CONKDIR}/conkyrc-mpd"     2>> ${LOGFILE}/conky.log
         conky -d -c "${CONKDIR}/conkyrc-todo"    2>> ${LOGFILE}/conky.log
+#conky -d -c "${CONKDIR}/conkyrc-mail"    2>> ${LOGFILE}/conky.log
+        conky -d -c "${CONKDIR}/conkyrc-top"     2>> ${LOGFILE}/conky.log
         conky -d -c "${CONKDIR}/conkyrc-bar"     2>> ${LOGFILE}/conky.log
       elif [ -f "${HOME}/.conkyrc" ]; then
         mkdir -p "${LOGFILE}"

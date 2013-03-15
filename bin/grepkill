@@ -3,7 +3,21 @@
 # /usr/local/bin/grepkill
 #
 
+if [ -z "`ps aux | grep $1 | grep -v grep`" ]; then
+  echo "There are no processes to be killed"
+  exit $?
+fi
+
 echo "The following processes will be killed:"
 ps aux | grep $1 | grep -v grep | awk '{print}'
 ps aux | grep $1 | grep -v grep | awk '{print $2}' | xargs kill
+sleep 0.5
+
+if [ -n "`ps aux | grep $1 | grep -v grep`" ]; then 
+  echo ""
+  echo "The following processes will be killed with the "-9" option"
+  ps aux | grep $1 | grep -v grep | awk '{print}'
+  ps aux | grep $1 | grep -v grep | awk '{print $2}' | xargs kill -9
+fi
+
 exit $?
